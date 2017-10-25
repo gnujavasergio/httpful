@@ -1,5 +1,5 @@
 {
-    "name": "nategood/httpful",
+    "name": "gnujavasergio/httpful",
     "description": "A Readable, Chainable, REST friendly, PHP HTTP Client",
     "homepage": "http://github.com/nategood/httpful",
     "license": "MIT",
@@ -10,6 +10,11 @@
             "name": "Nate Good",
             "email": "me@nategood.com",
             "homepage": "http://nategood.com"
+        },
+        {
+            "name": "Sergio Ochoa",
+            "email": "sochoa@openkm.com",
+            "homepage": "http://www.openkm.com"
         }
     ],
     "require": {
