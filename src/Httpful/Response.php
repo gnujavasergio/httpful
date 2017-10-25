@@ -7,22 +7,20 @@ namespace Httpful;
  *
  * @author Nate Good <me@nategood.com>
  */
-class Response
-{
+class Response {
 
-    public $body,
-           $raw_body,
-           $headers,
-           $raw_headers,
-           $request,
-           $code = 0,
-           $content_type,
-           $parent_type,
-           $charset,
-           $meta_data,
-           $is_mime_vendor_specific = false,
-           $is_mime_personal = false;
-
+    public $body;
+    public $raw_body;
+    public $headers;
+    public $raw_headers;
+    public $request;
+    public $code = 0;
+    public $content_type;
+    public $parent_type;
+    public $charset;
+    public $meta_data;
+    public $is_mime_vendor_specific = false;
+    public $is_mime_personal = false;
     private $parsers;
 
     /**
@@ -31,19 +29,18 @@ class Response
      * @param Request $request
      * @param array $meta_data
      */
-    public function __construct($body, $headers, Request $request, array $meta_data = array())
-    {
-        $this->request      = $request;
-        $this->raw_headers  = $headers;
-        $this->raw_body     = $body;
-        $this->meta_data    = $meta_data;
+    public function __construct($body, $headers, Request $request, array $meta_data = array()) {
+        $this->request = $request;
+        $this->raw_headers = $headers;
+        $this->raw_body = $body;
+        $this->meta_data = $meta_data;
 
-        $this->code         = $this->_parseCode($headers);
-        $this->headers      = Response\Headers::fromString($headers);
+        $this->code = $this->_parseCode($headers);
+        $this->headers = Response\Headers::fromString($headers);
 
         $this->_interpretHeaders();
 
-        $this->body         = $this->_parse($body);
+        $this->body = $this->_parse($body);
     }
 
     /**
@@ -59,16 +56,14 @@ class Response
      *
      * @return bool Did we receive a 4xx or 5xx?
      */
-    public function hasErrors()
-    {
+    public function hasErrors() {
         return $this->code >= 400;
     }
 
     /**
      * @return bool
      */
-    public function hasBody()
-    {
+    public function hasBody() {
         return !empty($this->body);
     }
 
@@ -79,8 +74,7 @@ class Response
      * @param string Http response body
      * @return array|string|object the response parse accordingly
      */
-    public function _parse($body)
-    {
+    public function _parse($body) {
         // If the user decided to forgo the automatic
         // smart parsing, short circuit.
         if (!$this->request->auto_parse) {
@@ -99,12 +93,10 @@ class Response
         //  4. Default to the content-type provided in the response
         $parse_with = $this->request->expected_type;
         if (empty($this->request->expected_type)) {
-            $parse_with = Httpful::hasParserRegistered($this->content_type)
-                ? $this->content_type
-                : $this->parent_type;
+            $parse_with = Httpful::hasParserRegistered($this->content_type) ? $this->content_type : $this->parent_type;
         }
 
-       return Httpful::get($parse_with)->parse($body);
+        return Httpful::get($parse_with)->parse($body);
     }
 
     /**
@@ -113,15 +105,14 @@ class Response
      * @param string $headers raw headers
      * @return array parse headers
      */
-    public function _parseHeaders($headers)
-    {
+    public function _parseHeaders($headers) {
         return Response\Headers::fromString($headers)->toArray();
     }
 
-    public function _parseCode($headers)
-    {
+    public function _parseCode($headers) {
         $end = strpos($headers, "\r\n");
-        if ($end === false) $end = strlen($headers);
+        if ($end === false)
+            $end = strlen($headers);
         $parts = explode(' ', substr($headers, 0, $end));
         if (count($parts) < 2 || !is_numeric($parts[1])) {
             throw new \Exception("Unable to parse response code from HTTP response due to malformed response");
@@ -133,8 +124,7 @@ class Response
      * After we've parse the headers, let's clean things
      * up a bit and treat some headers specially
      */
-    public function _interpretHeaders()
-    {
+    public function _interpretHeaders() {
         // Parse the Content-Type and charset
         $content_type = isset($this->headers['Content-Type']) ? $this->headers['Content-Type'] : '';
         $content_type = explode(';', $content_type);
@@ -171,8 +161,8 @@ class Response
     /**
      * @return string
      */
-    public function __toString()
-    {
+    public function __toString() {
         return $this->raw_body;
     }
+
 }

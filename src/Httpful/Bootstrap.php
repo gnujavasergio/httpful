@@ -8,8 +8,7 @@ namespace Httpful;
  *
  * @author Nate Good <me@nategood.com>
  */
-class Bootstrap
-{
+class Bootstrap {
 
     const DIR_GLUE = DIRECTORY_SEPARATOR;
     const NS_GLUE = '\\';
@@ -19,8 +18,7 @@ class Bootstrap
     /**
      * Register the autoloader and any other setup needed
      */
-    public static function init()
-    {
+    public static function init() {
         spl_autoload_register(array('\Httpful\Bootstrap', 'autoload'));
         self::registerHandlers();
     }
@@ -30,16 +28,14 @@ class Bootstrap
      *
      * @param string $classname
      */
-    public static function autoload($classname)
-    {
+    public static function autoload($classname) {
         self::_autoload(dirname(dirname(__FILE__)), $classname);
     }
 
     /**
      * Register the autoloader and any other setup needed
      */
-    public static function pharInit()
-    {
+    public static function pharInit() {
         spl_autoload_register(array('\Httpful\Bootstrap', 'pharAutoload'));
         self::registerHandlers();
     }
@@ -49,8 +45,7 @@ class Bootstrap
      *
      * @param string $classname
      */
-    public static function pharAutoload($classname)
-    {
+    public static function pharAutoload($classname) {
         self::_autoload('phar://httpful.phar', $classname);
     }
 
@@ -58,20 +53,19 @@ class Bootstrap
      * @param string $base
      * @param string $classname
      */
-    private static function _autoload($base, $classname)
-    {
-        $parts      = explode(self::NS_GLUE, $classname);
-        $path       = $base . self::DIR_GLUE . implode(self::DIR_GLUE, $parts) . '.php';
+    private static function _autoload($base, $classname) {
+        $parts = explode(self::NS_GLUE, $classname);
+        $path = $base . self::DIR_GLUE . implode(self::DIR_GLUE, $parts) . '.php';
 
         if (file_exists($path)) {
             require_once($path);
         }
     }
+
     /**
      * Register default mime handlers.  Is idempotent.
      */
-    public static function registerHandlers()
-    {
+    public static function registerHandlers() {
         if (self::$registered === true) {
             return;
         }
@@ -80,9 +74,9 @@ class Bootstrap
         // hardcoding into the library?
         $handlers = array(
             \Httpful\Mime::JSON => new \Httpful\Handlers\JsonHandler(),
-            \Httpful\Mime::XML  => new \Httpful\Handlers\XmlHandler(),
+            \Httpful\Mime::XML => new \Httpful\Handlers\XmlHandler(),
             \Httpful\Mime::FORM => new \Httpful\Handlers\FormHandler(),
-            \Httpful\Mime::CSV  => new \Httpful\Handlers\CsvHandler(),
+            \Httpful\Mime::CSV => new \Httpful\Handlers\CsvHandler(),
         );
 
         foreach ($handlers as $mime => $handler) {
@@ -94,4 +88,5 @@ class Bootstrap
 
         self::$registered = true;
     }
+
 }
