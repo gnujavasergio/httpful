@@ -46,7 +46,7 @@ class Request {
     public $follow_redirects = false;
     public $max_redirects = self::MAX_REDIRECTS_DEFAULT;
     public $payload_serializers = array();
-
+    public $curlPostFile;
     // Curl Handle
     public $_ch;
     public $_debug;
