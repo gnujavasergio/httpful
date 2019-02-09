@@ -23,8 +23,20 @@ class FormHandler extends MimeHandlerAdapter {
      * @param mixed $payload
      * @return string
      */
-    public function serialize($payload) {
-        return http_build_query($payload, null, '&');
+    public function serialize($payload) {       
+        $data = [];
+        $string = '';
+        foreach ($payload as $key => $param) {
+            if (is_array($param)) {
+                foreach ($param as $value) {
+                    $string .= '&' . $key . '=' . urlencode($value);
+                }
+            } else {
+                $data[$key] = $param;
+            }
+        }
+
+        return http_build_query($data, null, '&') . $string;
     }
 
 }
